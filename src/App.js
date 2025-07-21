@@ -1,4 +1,5 @@
 import MAIN from "./components/MAIN";
+import SignUp from "./components/SignUp";
 
 class App extends MAIN {
     initiate() {
@@ -7,7 +8,19 @@ class App extends MAIN {
 
     #UI() {
         return `
-        <div>Hello</div>
+        <header>
+
+        </header>
+
+        <main>
+          <div class="max-[450px]:px-2 max-[700px]:px-10 min-[700px]:px-20 rubik-400">
+            ${ SignUp.render() }
+          </div>
+        </main>
+
+        <footer>
+
+        </footer>
         `
     }
 

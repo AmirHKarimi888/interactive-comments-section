@@ -2,3 +2,33 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+.rubik-400 {
+  font-family: "Rubik", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+.rubik-500 {
+  font-family: "Rubik", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+.rubik-700 {
+  font-family: "Rubik", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+}
+
+body {
+  @apply bg-[#f5f6faff];
+}
+
+.string-input {
+  @apply p-1 border border-gray-300 rounded-md;
+}
+
+.signup-btn {
+  @apply p-2 rounded-md text-sm bg-[#5457b6ff] cursor-pointer text-white hover:opacity-40;
+}
