@@ -1,1 +1,4 @@
-import './style.css'
+import './style.css';
+import App from './App';
+
+App.render("#app");
