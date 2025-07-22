@@ -1,9 +1,17 @@
+import Authentication from "./components/Authentication";
 import MAIN from "./components/MAIN";
-import SignUp from "./components/SignUp";
+import store from "./store";
 
 class App extends MAIN {
-    initiate() {
 
+    async initiate() {
+        await store.methods.getSignedInUser();
+        // await store.methods.getSelectedUser({username: "aaaaaa", password: ";3d:]xXRMP^9hHD@" })
+        // .then(() => console.log(store.data.selectedUser))
+    }
+
+    handler() {
+        this.select("#signOutBtn")?.addEventListener("click", () => store.methods.signOut());
     }
 
     #UI() {
@@ -14,7 +22,7 @@ class App extends MAIN {
 
         <main>
           <div id="mainContainer" class="max-[450px]:px-2 max-[700px]:px-10 min-[700px]:px-20 rubik-400">
-            ${ SignUp.render() }
+            ${ store.data.loggedInUser?.id ? `${JSON.stringify(store.data.loggedInUser)}<br/><br/><button id="signOutBtn">Sign Out</button>` : Authentication.render() }
           </div>
         </main>
 
@@ -24,7 +32,15 @@ class App extends MAIN {
         `
     }
 
-    render(parent) {
+    async render(parent) {
+        await this.initiate();
+        setTimeout(() => this.handler());
+        this.select(parent).innerHTML = "";
+        this.select(parent).insertAdjacentHTML("afterbegin", this.#UI());
+    }
+
+    rerender(parent) {
+        setTimeout(() => this.handler());
         this.select(parent).innerHTML = "";
         this.select(parent).insertAdjacentHTML("afterbegin", this.#UI());
     }
