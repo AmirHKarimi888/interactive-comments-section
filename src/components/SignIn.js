@@ -12,6 +12,7 @@ class SignIn extends MAIN {
 
         usernameCheck: true,
         passwordCheck: true,
+        existanceCheck: true
     }
 
     handler() {
@@ -33,9 +34,23 @@ class SignIn extends MAIN {
             this.rerender();
         })
 
-        this.select("#signUpForm").addEventListener("submit", async (event) => {
+        this.select("#signInForm").addEventListener("submit", async (event) => {
             event.preventDefault();
+            await store.methods.getAllUsers()
+            .then(async() => {
+              let foundUser = store.data.allUsers.find(user => user.username === this.#data.username && user.password === this.#data.password);
+              this.#data.existanceCheck = foundUser ? true : false;
 
+              if (this.#data.existanceCheck) {
+                await store.methods.signInUser(foundUser)
+                .then(() => {
+                  this.#data.username = "";
+                  this.#data.password = "";
+                })
+              } else {
+                this.rerender();
+              }
+            })
         })
     }
 
@@ -63,6 +78,8 @@ class SignIn extends MAIN {
             <div>
               <button id="signUpBtn" class="signup-btn mt-2">Sign In</button>
             </div>
+
+            ${this.#data.existanceCheck ? '' : '<div id="passwordConfirmError" class="w-[228px] text-xs text-red-500">Username is not found!</div>'}
 
             <div class="text-xs w-[228px]">
               <span>Don't have an account yet?</span>

@@ -7,81 +7,90 @@ import MAIN from "./MAIN";
 
 class SignUp extends MAIN {
 
-    #data = {
-        name: "",
-        username: "",
-        password: "",
-        passwordConfirm: "",
+  #data = {
+    name: "",
+    username: "",
+    password: "",
+    passwordConfirm: "",
 
-        showPassword: false,
-        showPasswordConfirm: false,
+    showPassword: false,
+    showPasswordConfirm: false,
 
-        nameCheck: true,
-        usernameCheck: true,
-        passwordCheck: true,
-        passwordConfirmCheck: true
-    }
+    nameCheck: true,
+    usernameCheck: true,
+    passwordCheck: true,
+    passwordConfirmCheck: true,
+    existanceCheck: false
+  }
 
-    handler() {
+  handler() {
 
-        this.select("#switchToSignInBtn").addEventListener("click", () => {
-            store.data.isSignUpPage = false;
-            Authentication.rerender();
-        })
+    this.select("#switchToSignInBtn").addEventListener("click", () => {
+      store.data.isSignUpPage = false;
+      Authentication.rerender();
+    })
 
-        this.select("#name").addEventListener("change", () => {
-            this.#data.name = this.select("#name").value;
-        })
+    this.select("#name").addEventListener("change", () => {
+      this.#data.name = this.select("#name").value;
+    })
 
-        this.select("#username").addEventListener("change", () => {
-            this.#data.username = this.select("#username").value;
-        })
+    this.select("#username").addEventListener("change", () => {
+      this.#data.username = this.select("#username").value;
+    })
 
-        this.select("#password").addEventListener("change", () => {
-            this.#data.password = this.select("#password").value;
-        })
+    this.select("#password").addEventListener("change", () => {
+      this.#data.password = this.select("#password").value;
+    })
 
-        this.select("#passwordConfirm").addEventListener("change", () => {
-            this.#data.passwordConfirm = this.select("#passwordConfirm").value;
-        })
+    this.select("#passwordConfirm").addEventListener("change", () => {
+      this.#data.passwordConfirm = this.select("#passwordConfirm").value;
+    })
 
-        this.select("#showPasswordBtn").addEventListener("change", () => {
-            this.#data.showPassword = !this.#data.showPassword;
-            this.rerender();
-        })
+    this.select("#showPasswordBtn").addEventListener("change", () => {
+      this.#data.showPassword = !this.#data.showPassword;
+      this.rerender();
+    })
 
-        this.select("#showPasswordConfirmBtn").addEventListener("change", () => {
-            this.#data.showPasswordConfirm = !this.#data.showPasswordConfirm;
-            this.rerender();
-        })
+    this.select("#showPasswordConfirmBtn").addEventListener("change", () => {
+      this.#data.showPasswordConfirm = !this.#data.showPasswordConfirm;
+      this.rerender();
+    })
 
-        this.select("#signUpForm").addEventListener("submit", async (event) => {
-            event.preventDefault();
-            let { name, username, password, passwordConfirm } = useCheckRegex({ name: this.#data.name, username: this.#data.username, password: this.#data.password, passwordConfirm: this.#data.passwordConfirm });
-            this.#data.nameCheck = name;
-            this.#data.usernameCheck = username;
-            this.#data.passwordCheck = password;
-            this.#data.passwordConfirmCheck = passwordConfirm;
+    this.select("#signUpForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      let { name, username, password, passwordConfirm } = useCheckRegex({ name: this.#data.name, username: this.#data.username, password: this.#data.password, passwordConfirm: this.#data.passwordConfirm });
+      this.#data.nameCheck = name;
+      this.#data.usernameCheck = username;
+      this.#data.passwordCheck = password;
+      this.#data.passwordConfirmCheck = passwordConfirm;
 
-            if (name && username && password && passwordConfirm) {
-                const newUser = {
-                    uuid: useGenerateUUID().uuid,
-                    name: this.#data.name,
-                    username: this.#data.username,
-                    password: this.#data.password,
-                    avatar: useGenerateAvatar(this.#data.name).avatarUrl
-                }
-                await store.methods.signUpUser(newUser)
-                .then(async(data) => await store.methods.signInUser(data))
-                .then(() => console.log(store.data.loggedInUser))
-            } else {
-                this.rerender();
-            }
-        })
-    }
+      if (name && username && password && passwordConfirm) {
+        const newUser = {
+          uuid: useGenerateUUID().uuid,
+          name: this.#data.name,
+          username: this.#data.username,
+          password: this.#data.password,
+          avatar: useGenerateAvatar(this.#data.name).avatarUrl
+        }
 
-    #UI() {
-        return `
+        await store.methods.getAllUsers()
+          .then(async () => this.#data.existanceCheck = store.data.allUsers.some(user => user.username === newUser.username && user.password === newUser.password))
+
+        if (!this.#data.existanceCheck) {
+          await store.methods.signUpUser(newUser)
+            .then(async (data) => await store.methods.signInUser(data))
+        } else {
+          this.rerender();
+        }
+
+      } else {
+        this.rerender();
+      }
+    })
+  }
+
+  #UI() {
+    return `
         <div id="signUp" class="w-full h-screen flex flex-col justify-center items-center">
           <form id="signUpForm" class="px-8 py-5 bg-[#ffffffff] shadow-md rounded-lg flex flex-col gap-4">
             <div>
@@ -119,6 +128,8 @@ class SignUp extends MAIN {
               <button id="signUpBtn" class="signup-btn mt-2">Sign Up</button>
             </div>
 
+            ${this.#data.existanceCheck ? '<div id="passwordConfirmError" class="w-[228px] text-xs text-red-500">Username already exists!</div>' : ''}
+
             <div class="text-xs w-[228px]">
               <span>Do you already have an account?</span>
               <span id="switchToSignInBtn" class="cursor-pointer text-[#5457b6ff]">Sign In</span> 
@@ -126,18 +137,18 @@ class SignUp extends MAIN {
           </form>
         </div>
         `
-    }
+  }
 
-    render() {
-        setTimeout(() => this.handler());
-        return this.#UI();
-    }
+  render() {
+    setTimeout(() => this.handler());
+    return this.#UI();
+  }
 
-    rerender() {
-        setTimeout(() => this.handler());
-        this.select("#authentication").innerHTML = "";
-        this.select("#authentication").insertAdjacentHTML("afterbegin", this.#UI());
-    }
+  rerender() {
+    setTimeout(() => this.handler());
+    this.select("#authentication").innerHTML = "";
+    this.select("#authentication").insertAdjacentHTML("afterbegin", this.#UI());
+  }
 }
 
 export default new SignUp();

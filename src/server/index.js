@@ -1,8 +1,16 @@
 class httpService {
     uri = "https://687e3ea8c07d1a878c31e369.mockapi.io/interactive-comments/";
 
-    async get(endpoint) {
-        return await fetch(`${this.uri}${endpoint}`)
+    async get(endpoint, filters) {
+        let newUri = new URL(`${this.uri}${endpoint}`);
+
+        if (filters) {
+            for (let key in filters) {
+                newUri.searchParams.append(key, filters[key]);
+            }
+        }
+        
+        return await fetch(newUri)
             .then(res => res.json())
     }
 
