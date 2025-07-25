@@ -1,3 +1,4 @@
+import Authentication from "./components/Authentication";
 import Comments from "./components/Comments";
 import MAIN from "./components/MAIN";
 import store from "./store";
@@ -18,7 +19,7 @@ class App extends MAIN {
 
         <main>
           <div id="mainContainer" class="max-[450px]:px-2 max-[700px]:px-10 min-[700px]:px-20 rubik-400">
-            ${Comments.render()}
+            ${store.data.loggedInUser?.id ? Comments.render() : Authentication.render()}
           </div>
         </main>
 

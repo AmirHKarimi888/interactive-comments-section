@@ -1,5 +1,4 @@
 import store from "../store";
-import Authentication from "./Authentication";
 import Comment from "./Comment";
 import MAIN from "./MAIN";
 
@@ -16,7 +15,7 @@ class Comments extends MAIN {
     #UI() {
         return `
         <div id="commentsSection">
-        ${ store.data.loggedInUser?.id ? `${JSON.stringify(store.data.loggedInUser)}<br/><br/><button id="signOutBtn">Sign Out</button>` : Authentication.render() }
+        ${ store.data.loggedInUser?.id ? `${JSON.stringify(store.data.loggedInUser)}<br/><br/><button id="signOutBtn">Sign Out</button>` : '' }
         <br /><br /><br />
         ${store.data.comments.map(comment => {
             return Comment.render({ comment: comment })
