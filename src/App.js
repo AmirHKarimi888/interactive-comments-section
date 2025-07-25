@@ -1,4 +1,4 @@
-import Authentication from "./components/Authentication";
+import Comments from "./components/Comments";
 import MAIN from "./components/MAIN";
 import store from "./store";
 
@@ -10,10 +10,6 @@ class App extends MAIN {
         // .then(() => console.log(store.data.selectedUser))
     }
 
-    handler() {
-        this.select("#signOutBtn")?.addEventListener("click", () => store.methods.signOut());
-    }
-
     #UI() {
         return `
         <header>
@@ -22,7 +18,7 @@ class App extends MAIN {
 
         <main>
           <div id="mainContainer" class="max-[450px]:px-2 max-[700px]:px-10 min-[700px]:px-20 rubik-400">
-            ${ store.data.loggedInUser?.id ? `${JSON.stringify(store.data.loggedInUser)}<br/><br/><button id="signOutBtn">Sign Out</button>` : Authentication.render() }
+            ${Comments.render()}
           </div>
         </main>
 
@@ -34,13 +30,11 @@ class App extends MAIN {
 
     async render(parent) {
         await this.initiate();
-        setTimeout(() => this.handler());
         this.select(parent).innerHTML = "";
         this.select(parent).insertAdjacentHTML("afterbegin", this.#UI());
     }
 
     rerender(parent) {
-        setTimeout(() => this.handler());
         this.select(parent).innerHTML = "";
         this.select(parent).insertAdjacentHTML("afterbegin", this.#UI());
     }

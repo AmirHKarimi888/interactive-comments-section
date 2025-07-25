@@ -2,10 +2,12 @@ import App from "../App";
 import server from "../server"
 
 let data = {
+    allUsers: [],
     isSignUpPage: true,
     loggedInUser: "",
     selectedUser: "",
-    allUsers: []
+    comments: [],
+    selectedComment: ""
 }
 
 let methods = {
@@ -59,6 +61,14 @@ let methods = {
         document.cookie = "userId=; max-age=0; path=/";
         data.loggedInUser = "";
         App.rerender("#app");
+    },
+    async getComments() {
+        try {
+            await server.get("comments")
+            .then(d => data.comments = d)
+        } catch (err) {
+            console.error(err.message);
+        }
     }
 }
 
