@@ -49,10 +49,9 @@ let methods = {
             data.loggedInUser = "";
         }
     },
-    async getSelectedUser({username, password}) {
+    async getSelectedUser(userInfo) {
         try {
-            return await server.get(`users`)
-                .then(d => data.allUsers = d)
+            return await server.get(`users`, userInfo);
         } catch (err) {
             console.error(err.message)
         }

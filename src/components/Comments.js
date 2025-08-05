@@ -15,14 +15,18 @@ class Comments extends MAIN {
 
     #UI() {
         return `
-        <div id="commentsSection">
+        <ul id="commentsSection" class="flex flex-col gap-3">
           <div>
             ${AddComment.render()}
           </div>
         <br /><br /><br />
         ${ store.data.loggedInUser?.id ? `${JSON.stringify(store.data.loggedInUser)}<br/><br/><button id="signOutBtn">Sign Out</button>` : '' }
         ${store.data.comments.map(comment => {
-            return Comment.render({ comment: comment })
+            return `
+            <li id="comment${comment?.id}">
+              ${Comment.render({ comment: comment })}
+            </li>
+            `
         })
         .join("")}
         <div>

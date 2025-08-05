@@ -18,7 +18,7 @@ class App extends MAIN {
         </header>
 
         <main>
-          <div id="mainContainer" class="max-[500px]:px-4 max-[700px]:px-15 min-[700px]:px-30 min-[1000px]:px-70 rubik-400">
+          <div id="mainContainer" class="max-[500px]:px-4 pt-12 max-[700px]:px-15 min-[700px]:px-30 min-[1000px]:px-70 rubik-400">
             ${store.data.loggedInUser?.id ? Comments.render() : Authentication.render()}
           </div>
         </main>
