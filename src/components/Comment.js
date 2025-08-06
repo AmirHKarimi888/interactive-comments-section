@@ -1,6 +1,7 @@
 import store from "../store";
 import LikeComment from "./LikeComment";
 import MAIN from "./MAIN";
+import ReplyOrEditBtn from "./ReplyOrEditBtn";
 
 class Comment extends MAIN {
 
@@ -21,19 +22,34 @@ class Comment extends MAIN {
 
     #UI(comment) {
         return `
-        <div id="addCommentsSection" class="bg-white w-full rounded-lg p-5 flex justify-center gap-3 max-[500px]:flex-wrap max-[500px]:justify-between">
-          <div id="likeComments${comment?.id}">
+        <div id="addCommentsSection" class="bg-white w-full rounded-lg p-5 flex justify-around gap-3 max-[500px]:flex-wrap max-[500px]:justify-between">
+          <div id="likeComments${comment?.id}" class="max-[500px]:order-2">
             ${LikeComment.render({ comment: comment })}
           </div>
 
-          <div class="break-all">
-            <p>
-            ${JSON.stringify(this.#data.author)}
-            </p>
+          <div class="break-all max-[500px]:order-1 max-[500px]:w-full flex flex-col gap-3">
+            <div class="flex items-center gap-5">
+              <span>
+                <img src="${this.#data.author?.avatar}" />
+              </span>
+
+              <span>
+                <div>${this.#data.author?.name}</div>
+                <div>@${this.#data.author?.username}</div>
+              </span>
+
+              <span>
+                ${comment?.createdAt}
+              <span>
+            </div>
+
+            <div>
+              <p>${comment?.content}</p>
+            </div>
           </div>
 
-          <div>
-
+          <div class="max-[500px]:order-3">
+            ${ReplyOrEditBtn.render({ comment: comment })}
           </div>
         </div>
         `
