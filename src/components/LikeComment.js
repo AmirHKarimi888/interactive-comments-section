@@ -17,7 +17,7 @@ class LikeComment extends MAIN {
               <img src="./public/assets/images/icon-plus.svg">
           </span>
 
-          <span>
+          <span class="font-medium">
             ${comment?.likes.length - comment?.dislikes.length}
           </span>
 

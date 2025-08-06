@@ -1,6 +1,7 @@
 import store from "../store";
 import LikeComment from "./LikeComment";
 import MAIN from "./MAIN";
+import Replies from "./Replies";
 import ReplyOrEditBtn from "./ReplyOrEditBtn";
 
 class Comment extends MAIN {
@@ -20,31 +21,34 @@ class Comment extends MAIN {
         }
     }
 
-    #UI(comment) {
+    #UI(comment, id, mainAuthor) {
         return `
-        <div id="addCommentsSection" class="bg-white w-full rounded-lg p-5 flex justify-around gap-3 max-[500px]:flex-wrap max-[500px]:justify-between">
-          <div id="likeComments${comment?.id}" class="max-[500px]:order-2">
+        <div class="bg-white w-full rounded-lg p-5 flex justify-around gap-5 max-[500px]:flex-wrap max-[500px]:justify-between">
+          <div id="likeComments${id}" class="max-[500px]:order-2">
             ${LikeComment.render({ comment: comment })}
           </div>
 
-          <div class="break-all max-[500px]:order-1 max-[500px]:w-full flex flex-col gap-3">
+          <div class="break-all max-[500px]:order-1 max-[500px]:w-full flex flex-col gap-4">
             <div class="flex items-center gap-5">
               <span>
-                <img src="${this.#data.author?.avatar}" />
+                <img class="rounded-full w-10 cursor-pointer" src="${this.#data.author?.avatar}" />
               </span>
 
-              <span>
-                <div>${this.#data.author?.name}</div>
-                <div>@${this.#data.author?.username}</div>
+              <span class="cursor-pointer">
+                <div class="text-sm font-bold">${this.#data.author?.name}</div>
+                <div class="text-xs text-[#67727eff]">@${this.#data.author?.username}</div>
               </span>
 
-              <span>
+              <span class="text-sm text-[#67727eff]">
                 ${comment?.createdAt}
               <span>
             </div>
 
-            <div>
-              <p>${comment?.content}</p>
+            <div class="text-sm text-[#67727eff]">
+              <p>
+                ${`${id}`.includes("_") ? `<span class="text-[#5457b6ff] font-medium">@${mainAuthor}</span>` : ''}
+                ${comment?.content}
+              </p>
             </div>
           </div>
 
@@ -52,17 +56,23 @@ class Comment extends MAIN {
             ${ReplyOrEditBtn.render({ comment: comment })}
           </div>
         </div>
+        
+        ${comment?.replies?.length ? 
+        `
+        ${Replies.render({ comment: comment })}
+        ` : ""}
+
         `
     }
 
     render(props) {
         setTimeout(async() => await this.initiate(props));
-        return this.#UI(props?.comment);
+        return this.#UI(props?.comment, props?.id, props?.mainAuthor);
     }
 
     rerender(props) {
-        this.select(`#comment${props.comment?.id}`).innerHTML = "";
-        this.select(`#comment${props.comment?.id}`).insertAdjacentHTML("afterbegin", this.#UI(props?.comment));
+        this.select(`#comment${props?.id}`).innerHTML = "";
+        this.select(`#comment${props?.id}`).insertAdjacentHTML("afterbegin", this.#UI(props?.comment, props?.id, props?.mainAuthor));
     }
 }
 
