@@ -2,14 +2,6 @@ import MAIN from "./MAIN";
 
 class LikeComment extends MAIN {
 
-    #data = {
-
-    }
-
-    handler() {
-
-    }
-
     #UI(comment) {
         return `
         <div class="rounded-lg flex flex-col gap-3 max-[500px]:flex-row text-[#5457b6ff] bg-[#f5f6faff] p-3 max-[500px]:px-2 max-[500px]:py-1">
@@ -29,7 +21,6 @@ class LikeComment extends MAIN {
     }
 
     render(props) {
-        setTimeout(() => this.handler());
         return this.#UI(props?.comment);
     }
 }

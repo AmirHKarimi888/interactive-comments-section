@@ -1,18 +1,12 @@
+import store from "../store";
 import MAIN from "./MAIN";
 
 class ReplyComment extends MAIN {
 
-    #data = {
 
-    }
-
-    handler() {
-
-    }
-
-    #UI() {
-        return `
-        <form id="replyCommentsSection" class="bg-white w-full rounded-lg p-5 flex justify-center gap-3 max-[500px]:flex-wrap max-[500px]:justify-between">
+  #UI() {
+    return `
+        <form class="bg-white w-full rounded-lg p-5 flex justify-center gap-3 max-[500px]:flex-wrap max-[500px]:justify-between">
           <div class="rounded-full order-1 max-[500px]:order-2">
             <img src="${store.data.loggedInUser?.avatar}" class="rounded-full cursor-pointer" width="35" height="35" />
           </div>
@@ -26,15 +20,21 @@ class ReplyComment extends MAIN {
           </div>
         </form>
         `
-    }
+  }
 
-    render() {
+  render(props) {
+    setTimeout(() => {
+      this.clear(props?.id);
+    });
+  }
 
-    }
+  clear(id) {
+    this.select(`#replyCommentsSection${id}`).innerHTML = "";
+  }
 
-    rerender() {
-
-    }
+  rerender(id) {
+    this.select(`#replyCommentsSection${id}`).insertAdjacentHTML("afterbegin", this.#UI());
+  }
 }
 
 export default new ReplyComment();

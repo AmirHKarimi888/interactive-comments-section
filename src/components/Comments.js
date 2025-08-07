@@ -2,6 +2,7 @@ import store from "../store";
 import AddComment from "./AddComment";
 import Comment from "./Comment";
 import MAIN from "./MAIN";
+import ReplyComment from "./ReplyComment";
 
 class Comments extends MAIN {
     async initiate() {
@@ -22,6 +23,9 @@ class Comments extends MAIN {
             <li id="comment${comment?.id}">
               ${Comment.render({ comment: comment, id: comment?.id })}
             </li>
+            <div id="replyCommentsSection${comment?.id}" class="reply-section">
+              ${ReplyComment.render({ comment: comment, id: comment?.id })}
+            </div>
             `
           })
           .join("")}

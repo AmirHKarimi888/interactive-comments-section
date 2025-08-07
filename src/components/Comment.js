@@ -2,27 +2,38 @@ import store from "../store";
 import LikeComment from "./LikeComment";
 import MAIN from "./MAIN";
 import Replies from "./Replies";
-import ReplyOrEditBtn from "./ReplyOrEditBtn";
+import ReplyBtn from "./ReplyBtn";
+import ReplyComment from "./ReplyComment";
 
 class Comment extends MAIN {
 
-    #data = {
-        author: ""
+  #data = {
+    author: ""
+  }
+
+  async initiate(props) {
+    if (store.data.allUsers.length === 0) {
+      await store.methods.getAllUsers();
     }
 
-    async initiate(props) {
-        if (store.data.allUsers.length === 0) {
-            await store.methods.getAllUsers();
-        }
-
-        if (store.data.allUsers.length) {
-            this.#data.author = store.data.allUsers.find(user => user.username === props.comment?.author);
-            this.rerender(props);
-        }
+    if (store.data.allUsers.length) {
+      this.#data.author = store.data.allUsers.find(user => user.username === props.comment?.author);
+      this.rerender(props);
     }
+  }
 
-    #UI(comment, id, mainAuthor) {
-        return `
+  handler(props) {
+    this.select(`#replyBtn${props?.id}`).addEventListener("click", () => {
+      if (this.select(`#replyCommentsSection${props?.id}`).innerHTML.length === 0) {
+        ReplyComment.rerender(props?.id);
+      } else {
+        ReplyComment.clear(props?.id);
+      }
+    })
+  }
+
+  #UI(comment, id, mainAuthor) {
+    return `
         <div class="bg-white w-full rounded-lg p-5 flex justify-around gap-5 max-[500px]:flex-wrap max-[500px]:justify-between">
           <div id="likeComments${id}" class="max-[500px]:order-2">
             ${LikeComment.render({ comment: comment })}
@@ -53,27 +64,30 @@ class Comment extends MAIN {
           </div>
 
           <div class="max-[500px]:order-3">
-            ${ReplyOrEditBtn.render({ comment: comment })}
+            ${ReplyBtn.render({ comment: comment, id: id })}
           </div>
         </div>
         
-        ${comment?.replies?.length ? 
+        ${comment?.replies?.length ?
         `
-        ${Replies.render({ comment: comment })}
+        ${Replies.render({ comment: comment, id: id })}
         ` : ""}
 
         `
-    }
+  }
 
-    render(props) {
-        setTimeout(async() => await this.initiate(props));
-        return this.#UI(props?.comment, props?.id, props?.mainAuthor);
-    }
+  render(props) {
+    setTimeout(async () => {
+      await this.initiate(props);
+      this.handler(props);
+    });
+    return this.#UI(props?.comment, props?.id, props?.mainAuthor);
+  }
 
-    rerender(props) {
-        this.select(`#comment${props?.id}`).innerHTML = "";
-        this.select(`#comment${props?.id}`).insertAdjacentHTML("afterbegin", this.#UI(props?.comment, props?.id, props?.mainAuthor));
-    }
+  rerender(props) {
+    this.select(`#comment${props?.id}`).innerHTML = "";
+    this.select(`#comment${props?.id}`).insertAdjacentHTML("afterbegin", this.#UI(props?.comment, props?.id, props?.mainAuthor));
+  }
 }
 
 export default new Comment();
