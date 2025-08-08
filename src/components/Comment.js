@@ -26,8 +26,10 @@ class Comment extends MAIN {
     this.select(`#replyBtn${props?.id}`).addEventListener("click", () => {
       if (this.select(`#replyCommentsSection${props?.id}`).innerHTML.length === 0) {
         ReplyComment.rerender(props?.id);
+        this.select(`#replyCommentsSection${props?.id}`).classList.remove("hidden");
       } else {
         ReplyComment.clear(props?.id);
+        this.select(`#replyCommentsSection${props?.id}`).classList.add("hidden");
       }
     })
   }

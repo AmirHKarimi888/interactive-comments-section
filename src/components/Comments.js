@@ -16,14 +16,14 @@ class Comments extends MAIN {
 
     #UI() {
         return `
-        <ul id="commentsSection" class="flex flex-col gap-3">
+        <ul id="commentsSection" class="flex flex-col gap-4">
           ${ store.data.loggedInUser?.id ? `${JSON.stringify(store.data.loggedInUser)}<br/><br/><button id="signOutBtn">Sign Out</button>` : '' }
           ${store.data.comments.map(comment => {
             return `
             <li id="comment${comment?.id}">
               ${Comment.render({ comment: comment, id: comment?.id })}
             </li>
-            <div id="replyCommentsSection${comment?.id}" class="reply-section">
+            <div id="replyCommentsSection${comment?.id}" class="reply-section hidden">
               ${ReplyComment.render({ comment: comment, id: comment?.id })}
             </div>
             `
