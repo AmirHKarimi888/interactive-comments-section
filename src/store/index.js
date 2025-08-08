@@ -68,6 +68,13 @@ let methods = {
         } catch (err) {
             console.error(err.message);
         }
+    },
+    async addComment(newComment) {
+        try {
+            return await server.post("comments", newComment);
+        } catch (err) {
+            console.error(err.message);
+        }
     }
 }
 

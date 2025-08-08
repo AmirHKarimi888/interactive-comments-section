@@ -25,10 +25,10 @@ class Comment extends MAIN {
   handler(props) {
     this.select(`#replyBtn${props?.id}`).addEventListener("click", () => {
       if (this.select(`#replyCommentsSection${props?.id}`).innerHTML.length === 0) {
-        ReplyComment.rerender(props?.id);
+        ReplyComment.rerender(props);
         this.select(`#replyCommentsSection${props?.id}`).classList.remove("hidden");
       } else {
-        ReplyComment.clear(props?.id);
+        ReplyComment.clear(props);
         this.select(`#replyCommentsSection${props?.id}`).classList.add("hidden");
       }
     })
@@ -36,7 +36,7 @@ class Comment extends MAIN {
 
   #UI(comment, id, mainAuthor) {
     return `
-        <div class="bg-white w-full rounded-lg p-5 flex justify-around gap-5 max-[500px]:flex-wrap max-[500px]:justify-between">
+        <div class="bg-white w-full rounded-lg p-5 flex gap-5 max-[500px]:flex-wrap max-[500px]:justify-between">
           <div id="likeComments${id}" class="max-[500px]:order-2">
             ${LikeComment.render({ comment: comment })}
           </div>
