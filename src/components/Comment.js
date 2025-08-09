@@ -1,4 +1,6 @@
 import store from "../store";
+import DeleteBtn from "./DeleteBtn";
+import EditBtn from "./EditBtn";
 import LikeComment from "./LikeComment";
 import MAIN from "./MAIN";
 import Replies from "./Replies";
@@ -41,7 +43,7 @@ class Comment extends MAIN {
             ${LikeComment.render({ comment: comment })}
           </div>
 
-          <div class="break-all max-[500px]:order-1 max-[500px]:w-full flex flex-col gap-4">
+          <div class="max-[500px]:order-1 max-[500px]:w-full flex flex-col gap-4">
             <div class="flex items-center gap-5">
               <span>
                 <img class="rounded-full w-10 cursor-pointer" src="${this.#data.author?.avatar}" />
@@ -52,12 +54,18 @@ class Comment extends MAIN {
                 <div class="text-xs text-[#67727eff]">@${this.#data.author?.username}</div>
               </span>
 
+              ${comment?.author === store.data.loggedInUser?.username ? `
+              <span class="bg-[#5457b6ff] text-white text-[0.6rem] px-1.5 rounded-sm">
+                you
+              </span>
+              ` : ''}
+
               <span class="text-sm text-[#67727eff]">
                 ${comment?.createdAt}
               <span>
             </div>
 
-            <div class="text-sm text-[#67727eff]">
+            <div class="text-sm text-[#67727eff] break-all">
               <p>
                 ${`${id}`.includes("_") ? `<span class="text-[#5457b6ff] font-medium">@${mainAuthor}</span>` : ''}
                 ${comment?.content}
@@ -66,7 +74,14 @@ class Comment extends MAIN {
           </div>
 
           <div class="max-[500px]:order-3">
-            ${ReplyBtn.render({ comment: comment, id: id })}
+            ${comment?.author === store.data.loggedInUser?.username ? `
+              ${ReplyBtn.render({ comment: comment, id: id })}
+            ` : `
+              <span class="flex gap-2">
+                ${DeleteBtn.render({ comment: comment, id: id })}
+                ${EditBtn.render({ comment: comment, id: id })}
+              </span>
+            `}
           </div>
         </div>
         
