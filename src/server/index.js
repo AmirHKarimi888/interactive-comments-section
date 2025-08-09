@@ -37,7 +37,7 @@ class httpService {
     }
 
     async delete(endpoint) {
-        return await fetch(endpoint, {
+        return await fetch(`${this.uri}${endpoint}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"

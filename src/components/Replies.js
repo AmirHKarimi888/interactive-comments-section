@@ -1,4 +1,5 @@
 import Comment from "./Comment";
+import EditComment from "./EditComment";
 import MAIN from "./MAIN";
 import ReplyComment from "./ReplyComment";
 
@@ -16,6 +17,10 @@ class Replies extends MAIN {
 
               <div id="replyCommentsSection${comment?.id}_${reply?.id}" class="reply-section hidden">
                 ${ReplyComment.render({ comment: comment, id: `${comment?.id}_${reply?.id}` })}
+              </div>
+
+              <div id="editCommentsSection${comment?.id}_${reply?.id}" class="edit-section hidden">
+                ${EditComment.render({ comment: comment, id: `${comment?.id}_${reply?.id}` })}
               </div>
               `
           })

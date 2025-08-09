@@ -75,6 +75,20 @@ let methods = {
         } catch (err) {
             console.error(err.message);
         }
+    },
+    async editComment(id, edited) {
+        try {
+            return await server.put(`comments/${id}`, edited);
+        } catch (err) {
+            console.error(err.message);
+        }
+    },
+    async deleteComment(id) {
+        try {
+            return await server.delete(`comments/${id}`);
+        } catch (err) {
+            console.error(err.message);
+        }
     }
 }
 

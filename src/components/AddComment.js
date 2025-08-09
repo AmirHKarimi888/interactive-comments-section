@@ -16,7 +16,10 @@ class AddComment extends MAIN {
 
     this.select(`#addCommentSection`)?.addEventListener("submit", async (e) => {
       e.preventDefault();
+      let biggestId = store.data.comments.sort((a, b) => +b?.id - a?.id)[0]?.id;
+      console.log(biggestId);
       let newComment = {
+        id: `${+biggestId + 1}`,
         content: this.#data.comment,
         createdAt: `${new Date().getFullYear()} - ${new Date().getMonth() + 1} - ${new Date().getDate()}`,
         author: store.data.loggedInUser?.username,

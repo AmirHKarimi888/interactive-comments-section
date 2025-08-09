@@ -1,6 +1,7 @@
 import store from "../store";
 import AddComment from "./AddComment";
 import Comment from "./Comment";
+import EditComment from "./EditComment";
 import MAIN from "./MAIN";
 import ReplyComment from "./ReplyComment";
 
@@ -25,6 +26,9 @@ class Comments extends MAIN {
             </li>
             <div id="replyCommentsSection${comment?.id}" class="reply-section hidden">
               ${ReplyComment.render({ comment: comment, id: comment?.id })}
+            </div>
+            <div id="editCommentsSection${comment?.id}" class="edit-section hidden">
+              ${EditComment.render({ comment: comment, id: comment?.id })}
             </div>
             `
           })

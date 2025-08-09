@@ -1,6 +1,8 @@
 import store from "../store";
+import Comments from "./Comments";
 import DeleteBtn from "./DeleteBtn";
 import EditBtn from "./EditBtn";
+import EditComment from "./EditComment";
 import LikeComment from "./LikeComment";
 import MAIN from "./MAIN";
 import Replies from "./Replies";
@@ -33,6 +35,29 @@ class Comment extends MAIN {
         ReplyComment.clear(props);
         this.select(`#replyCommentsSection${props?.id}`).classList.add("hidden");
       }
+    })
+
+    this.select(`#editBtn${props?.id}`)?.addEventListener("click", () => {
+      this.selectAll(".edit-section").forEach(el => el.innerHTML = "");
+      if (this.select(`#editCommentsSection${props?.id}`).innerHTML.length === 0) {
+        EditComment.rerender(props);
+        this.select(`#editCommentsSection${props?.id}`).classList.remove("hidden");
+      } else {
+        EditComment.clear(props);
+        this.select(`#editCommentsSection${props?.id}`).classList.add("hidden");
+      }
+    })
+
+    this.select(`#deleteBtn${props?.id}`)?.addEventListener("click", async () => {
+      await store.methods.deleteComment(props?.comment?.id)
+        .then(() => {
+          store.data.comments = store.data.comments.filter(com => {
+            if (`${com.id}` !== `${props?.comment?.id}`) {
+              return com;
+            }
+          })
+        })
+        .then(() => Comments.render())
     })
   }
 
@@ -74,7 +99,7 @@ class Comment extends MAIN {
           </div>
 
           <div class="max-[800px]:order-3">
-            ${comment?.author === store.data.loggedInUser?.username ? `
+            ${comment?.author !== store.data.loggedInUser?.username ? `
               ${ReplyBtn.render({ comment: comment, id: id })}
             ` : `
               <span class="flex gap-2">
