@@ -25,7 +25,7 @@ class Comment extends MAIN {
   }
 
   handler(props) {
-    this.select(`#replyBtn${props?.id}`).addEventListener("click", () => {
+    this.select(`#replyBtn${props?.id}`)?.addEventListener("click", () => {
       if (this.select(`#replyCommentsSection${props?.id}`).innerHTML.length === 0) {
         ReplyComment.rerender(props);
         this.select(`#replyCommentsSection${props?.id}`).classList.remove("hidden");
@@ -38,12 +38,12 @@ class Comment extends MAIN {
 
   #UI(comment, id, mainAuthor) {
     return `
-        <div class="bg-white w-full rounded-lg p-5 flex gap-5 max-[500px]:flex-wrap max-[500px]:justify-between">
-          <div id="likeComments${id}" class="max-[500px]:order-2">
+        <div class="bg-white w-full rounded-lg p-5 flex gap-5 max-[800px]:flex-wrap max-[800px]:justify-between">
+          <div id="likeComments${id}" class="max-[800px]:order-2">
             ${LikeComment.render({ comment: comment })}
           </div>
 
-          <div class="max-[500px]:order-1 max-[500px]:w-full flex flex-col gap-4">
+          <div class="max-[800px]:order-1 max-[800px]:w-full flex flex-col gap-4">
             <div class="flex items-center gap-5">
               <span>
                 <img class="rounded-full w-10 cursor-pointer" src="${this.#data.author?.avatar}" />
@@ -73,7 +73,7 @@ class Comment extends MAIN {
             </div>
           </div>
 
-          <div class="max-[500px]:order-3">
+          <div class="max-[800px]:order-3">
             ${comment?.author === store.data.loggedInUser?.username ? `
               ${ReplyBtn.render({ comment: comment, id: id })}
             ` : `

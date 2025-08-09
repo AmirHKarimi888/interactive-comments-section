@@ -37,16 +37,16 @@ class AddComment extends MAIN {
 
   #UI() {
     return `
-        <form id="addCommentSection" class="bg-white w-full rounded-lg p-5 flex justify-center gap-3 max-[500px]:flex-wrap max-[500px]:justify-between">
-          <div class="rounded-full order-1 max-[500px]:order-2">
+        <form id="addCommentSection" class="bg-white w-full rounded-lg p-5 flex justify-center gap-3 max-[800px]:flex-wrap max-[800px]:justify-between">
+          <div class="rounded-full order-1 max-[800px]:order-2">
             <img src="${store.data.loggedInUser?.avatar}" class="rounded-full cursor-pointer" width="35" height="35" />
           </div>
 
-          <div id="commentInput" class="order-2 max-[500px]:order-1 w-full">
+          <div id="commentInput" class="order-2 max-[800px]:order-1 w-full">
             <textarea class="w-full h-[90px] px-3 py-2 border border-gray-300 rounded-md resize-none" placeholder="Add a comment..."></textarea>
           </div>
 
-          <div class="order-3 max-[500px]:order-3">
+          <div class="order-3 max-[800px]:order-3">
             <button id="addCommentBtn" class="add-comment-btn">SEND</button>
           </div>
         </form>

@@ -21,16 +21,16 @@ class ReplyComment extends MAIN {
 
   #UI(props) {
     return `
-        <form id="replyForm${props?.id}" class="bg-white w-full rounded-lg p-5 flex justify-center gap-3 max-[500px]:flex-wrap max-[500px]:justify-between">
-          <div class="rounded-full order-1 max-[500px]:order-2">
+        <form id="replyForm${props?.id}" class="bg-white w-full rounded-lg p-5 flex justify-center gap-3 max-[800px]:flex-wrap max-[800px]:justify-between">
+          <div class="rounded-full order-1 max-[800px]:order-2">
             <img src="${store.data.loggedInUser?.avatar}" class="rounded-full cursor-pointer" width="35" height="35" />
           </div>
 
-          <div id="replyInput${props?.id}" class="order-2 max-[500px]:order-1 w-full">
+          <div id="replyInput${props?.id}" class="order-2 max-[800px]:order-1 w-full">
             <textarea class="w-full h-[90px] px-3 py-2 border border-gray-300 rounded-md resize-none" placeholder="Add a comment..."></textarea>
           </div>
 
-          <div id="replyCommentBtn${props?.id}" class="order-3 max-[500px]:order-3">
+          <div id="replyCommentBtn${props?.id}" class="order-3 max-[800px]:order-3">
             <button class="add-comment-btn">REPLY</button>
           </div>
         </form>
