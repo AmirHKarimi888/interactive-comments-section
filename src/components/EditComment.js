@@ -1,5 +1,4 @@
 import store from "../store";
-import Comment from "./Comment";
 import Comments from "./Comments";
 import MAIN from "./MAIN";
 
@@ -71,8 +70,8 @@ class EditComment extends MAIN {
 
   rerender(props) {
     setTimeout(() => {
-        this.handler(props);
         this.initiate(props);
+        this.handler(props);
     });
     this.select(`#editCommentsSection${props?.id}`).insertAdjacentHTML("afterbegin", this.#UI(props));
   }

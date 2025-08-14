@@ -9,7 +9,7 @@ class Replies extends MAIN {
         return `
         <ul id="RepliesSection${comment?.id}" class="flex flex-col mt-3 gap-3 border-l-2 border-gray-300 pl-10 ml-10 max-[800px]:ml-0 max-[800px]:pl-5">
 
-          ${comment?.replies.map(reply => {
+          ${comment?.replies.sort((a, b) => +a?.id - +b?.id).map(reply => {
               return `
               <li id="comment${comment?.id}_${reply?.id}">
                 ${Comment.render({ comment: reply, id: `${comment?.id}_${reply?.id}`, mainAuthor: comment?.author })}
@@ -33,6 +33,10 @@ class Replies extends MAIN {
         return this.#UI(props?.comment);
     }
 
+    rerender(props) {
+      this.select(`#repliesSection${props?.id}`).innerHTML = "";
+      this.select(`#repliesSection${props?.id}`).insertAdjacentHTML("afterbegin", this.#UI(props?.comment));
+    }
 }
 
 export default new Replies();

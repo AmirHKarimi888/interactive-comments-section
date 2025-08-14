@@ -38,7 +38,6 @@ class Comment extends MAIN {
     })
 
     this.select(`#editBtn${props?.id}`)?.addEventListener("click", () => {
-      this.selectAll(".edit-section").forEach(el => el.innerHTML = "");
       if (this.select(`#editCommentsSection${props?.id}`).innerHTML.length === 0) {
         EditComment.rerender(props);
         this.select(`#editCommentsSection${props?.id}`).classList.remove("hidden");
@@ -59,13 +58,97 @@ class Comment extends MAIN {
         })
         .then(() => Comments.render())
     })
+
+    this.select(`#likeBtn${props?.id}`).addEventListener("click", async () => {
+
+      let likes = [];
+      let dislikes = [];
+
+      if (!props?.id.includes("_")) {
+
+        if (props?.comment?.likes.includes(store.data.loggedInUser?.username)) {
+
+          likes = [...props?.comment?.likes].filter(like => {
+            if (like !== store.data.loggedInUser?.username) {
+              return like;
+            }
+          })
+
+        } else {
+          likes = [...props?.comment?.likes, store.data.loggedInUser?.username];
+          dislikes = [...props?.comment?.dislikes].filter(dislike => {
+            if (dislike !== store.data.loggedInUser?.username) {
+              return dislike;
+            }
+          })
+        }
+
+        await store.methods.editComment(props?.comment?.id, {
+          likes: likes,
+          dislikes: dislikes
+        })
+          .then(() => {
+            store.data.comments.filter(com => {
+              if (com.id === props?.comment?.id) {
+                com.likes = [...likes];
+                com.dislikes = [...dislikes];
+              }
+            })
+
+            LikeComment.rerender(props);
+          })
+
+      }
+    })
+
+    this.select(`#dislikeBtn${props?.id}`).addEventListener("click", async () => {
+
+      let likes = [];
+      let dislikes = [];
+
+      if (!props?.id.includes("_")) {
+
+        if (props?.comment?.dislikes.includes(store.data.loggedInUser?.username)) {
+
+          dislikes = [...props?.comment?.dislikes].filter(dislike => {
+            if (dislike !== store.data.loggedInUser?.username) {
+              return dislike;
+            }
+          })
+
+        } else {
+          dislikes = [...props?.comment?.dislikes, store.data.loggedInUser?.username];
+          likes = [...props?.comment?.likes].filter(like => {
+            if (like !== store.data.loggedInUser?.username) {
+              return like;
+            }
+          })
+        }
+
+        await store.methods.editComment(props?.comment?.id, {
+          likes: likes,
+          dislikes: dislikes
+        })
+          .then(() => {
+            store.data.comments.filter(com => {
+              if (com.id === props?.comment?.id) {
+                com.likes = [...likes];
+                com.dislikes = [...dislikes];
+              }
+            })
+
+            LikeComment.rerender(props);
+          })
+
+      }
+    })
   }
 
   #UI(comment, id, mainAuthor) {
     return `
         <div class="bg-white w-full rounded-lg p-5 flex gap-5 max-[800px]:flex-wrap max-[800px]:justify-between">
-          <div id="likeComments${id}" class="max-[800px]:order-2">
-            ${LikeComment.render({ comment: comment })}
+          <div id="likesSection${id}" class="max-[800px]:order-2">
+            ${LikeComment.render({ comment: comment, id: id })}
           </div>
 
           <div class="max-[800px]:order-1 max-[800px]:w-full flex flex-col gap-4">
@@ -112,7 +195,9 @@ class Comment extends MAIN {
         
         ${comment?.replies?.length ?
         `
-        ${Replies.render({ comment: comment, id: id })}
+        <div id="repliesSection${id}">
+          ${Replies.render({ comment: comment, id: id })}
+        </div>
         ` : ""}
 
         `
