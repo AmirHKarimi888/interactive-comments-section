@@ -59,31 +59,33 @@ class Comment extends MAIN {
         .then(() => Comments.render())
     })
 
-    this.select(`#likeBtn${props?.id}`).addEventListener("click", async () => {
+    this.select(`#likeBtn${props?.id}`)?.addEventListener("click", async () => {
 
       let likes = [];
       let dislikes = [];
 
+      if (props?.comment?.likes.includes(store.data.loggedInUser?.username)) {
+
+        likes = [...props?.comment?.likes].filter(like => {
+          if (like !== store.data.loggedInUser?.username) {
+            return like;
+          }
+        })
+
+      } else {
+        likes = [...props?.comment?.likes, store.data.loggedInUser?.username];
+        dislikes = [...props?.comment?.dislikes].filter(dislike => {
+          if (dislike !== store.data.loggedInUser?.username) {
+            return dislike;
+          }
+        })
+      }
+
+
+
       if (!props?.id.includes("_")) {
 
-        if (props?.comment?.likes.includes(store.data.loggedInUser?.username)) {
-
-          likes = [...props?.comment?.likes].filter(like => {
-            if (like !== store.data.loggedInUser?.username) {
-              return like;
-            }
-          })
-
-        } else {
-          likes = [...props?.comment?.likes, store.data.loggedInUser?.username];
-          dislikes = [...props?.comment?.dislikes].filter(dislike => {
-            if (dislike !== store.data.loggedInUser?.username) {
-              return dislike;
-            }
-          })
-        }
-
-        await store.methods.editComment(props?.comment?.id, {
+        await store.methods.editComment(props?.id?.split("_")[0], {
           likes: likes,
           dislikes: dislikes
         })
@@ -92,6 +94,32 @@ class Comment extends MAIN {
               if (com.id === props?.comment?.id) {
                 com.likes = [...likes];
                 com.dislikes = [...dislikes];
+              }
+            })
+
+            LikeComment.rerender(props);
+          })
+
+
+      } else {
+
+
+        let replies = props?.mainComment?.replies;
+
+        replies.filter(rep => {
+          if (+rep.id === +props?.id.split("_")[1]) {
+            rep.likes = [...likes];
+            rep.dislikes = [...dislikes];
+          }
+        })
+
+        await store.methods.editComment(props?.id?.split("_")[0], {
+          replies: replies
+        })
+          .then(() => {
+            store.data.comments.filter(com => {
+              if (com.id === props?.comment?.id) {
+                com.replies = replies;
               }
             })
 
@@ -101,31 +129,34 @@ class Comment extends MAIN {
       }
     })
 
-    this.select(`#dislikeBtn${props?.id}`).addEventListener("click", async () => {
+
+    this.select(`#dislikeBtn${props?.id}`)?.addEventListener("click", async () => {
 
       let likes = [];
       let dislikes = [];
 
+      if (props?.comment?.dislikes.includes(store.data.loggedInUser?.username)) {
+
+        dislikes = [...props?.comment?.dislikes].filter(dislike => {
+          if (dislike !== store.data.loggedInUser?.username) {
+            return dislike;
+          }
+        })
+
+      } else {
+        dislikes = [...props?.comment?.dislikes, store.data.loggedInUser?.username];
+        likes = [...props?.comment?.likes].filter(like => {
+          if (like !== store.data.loggedInUser?.username) {
+            return like;
+          }
+        })
+      }
+
+
+
       if (!props?.id.includes("_")) {
 
-        if (props?.comment?.dislikes.includes(store.data.loggedInUser?.username)) {
-
-          dislikes = [...props?.comment?.dislikes].filter(dislike => {
-            if (dislike !== store.data.loggedInUser?.username) {
-              return dislike;
-            }
-          })
-
-        } else {
-          dislikes = [...props?.comment?.dislikes, store.data.loggedInUser?.username];
-          likes = [...props?.comment?.likes].filter(like => {
-            if (like !== store.data.loggedInUser?.username) {
-              return like;
-            }
-          })
-        }
-
-        await store.methods.editComment(props?.comment?.id, {
+        await store.methods.editComment(props?.id?.split("_")[0], {
           likes: likes,
           dislikes: dislikes
         })
@@ -140,15 +171,41 @@ class Comment extends MAIN {
             LikeComment.rerender(props);
           })
 
+
+      } else {
+
+
+        let replies = props?.mainComment?.replies;
+
+        replies.filter(rep => {
+          if (+rep.id === +props?.id.split("_")[1]) {
+            rep.likes = [...likes];
+            rep.dislikes = [...dislikes];
+          }
+        })
+
+        await store.methods.editComment(props?.id?.split("_")[0], {
+          replies: replies
+        })
+          .then(() => {
+            store.data.comments.filter(com => {
+              if (com.id === props?.comment?.id) {
+                com.replies = replies;
+              }
+            })
+
+            LikeComment.rerender(props);
+          })
       }
+
     })
   }
 
-  #UI(comment, id, mainAuthor) {
+  #UI(mainComment, comment, id) {
     return `
         <div class="bg-white w-full rounded-lg p-5 flex gap-5 max-[800px]:flex-wrap max-[800px]:justify-between">
           <div id="likesSection${id}" class="max-[800px]:order-2">
-            ${LikeComment.render({ comment: comment, id: id })}
+            ${LikeComment.render({ mainComment: mainComment, comment: comment, id: id })}
           </div>
 
           <div class="max-[800px]:order-1 max-[800px]:w-full flex flex-col gap-4">
@@ -175,7 +232,7 @@ class Comment extends MAIN {
 
             <div class="text-sm text-[#67727eff] break-all">
               <p>
-                ${`${id}`.includes("_") ? `<span class="text-[#5457b6ff] font-medium">@${mainAuthor}</span>` : ''}
+                ${`${id}`.includes("_") ? `<span class="text-[#5457b6ff] font-medium">@${mainComment?.author}</span>` : ''}
                 ${comment?.content}
               </p>
             </div>
@@ -208,12 +265,14 @@ class Comment extends MAIN {
       await this.initiate(props);
       this.handler(props);
     });
-    return this.#UI(props?.comment, props?.id, props?.mainAuthor);
+    return this.#UI(props?.mainComment, props?.comment, props?.id);
   }
 
   rerender(props) {
-    this.select(`#comment${props?.id}`).innerHTML = "";
-    this.select(`#comment${props?.id}`).insertAdjacentHTML("afterbegin", this.#UI(props?.comment, props?.id, props?.mainAuthor));
+    if (this.select(`#comment${props?.id}`)) {
+      this.select(`#comment${props?.id}`).innerHTML = "";
+      this.select(`#comment${props?.id}`).insertAdjacentHTML("afterbegin", this.#UI(props?.mainComment, props?.comment, props?.id));
+    }
   }
 }
 

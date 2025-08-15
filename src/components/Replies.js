@@ -12,7 +12,7 @@ class Replies extends MAIN {
           ${comment?.replies.sort((a, b) => +a?.id - +b?.id).map(reply => {
       return `
               <li id="comment${comment?.id}_${reply?.id}">
-                ${Comment.render({ comment: reply, id: `${comment?.id}_${reply?.id}`, mainAuthor: comment?.author })}
+                ${Comment.render({ mainComment: comment, comment: reply, id: `${comment?.id}_${reply?.id}` })}
               </li>
 
               <div id="replyCommentsSection${comment?.id}_${reply?.id}" class="reply-section hidden">

@@ -18,11 +18,11 @@ class Comments extends MAIN {
     #UI() {
         return `
         <ul id="commentsSection" class="flex flex-col gap-4">
-          ${ store.data.loggedInUser?.id ? `${JSON.stringify(store.data.loggedInUser)}<br/><br/><button id="signOutBtn">Sign Out</button>` : '' }
+          ${ store.data.loggedInUser?.id ? `<br/><br/><button id="signOutBtn">Sign Out</button>` : '' }
           ${store.data.comments.sort((a, b) => +a?.id - +b?.id).map(comment => {
             return `
             <li id="comment${comment?.id}">
-              ${Comment.render({ comment: comment, id: comment?.id })}
+              ${Comment.render({ mainComment: comment, comment: comment, id: comment?.id })}
             </li>
             <div id="replyCommentsSection${comment?.id}" class="reply-section hidden">
               ${ReplyComment.render({ comment: comment, id: comment?.id })}
