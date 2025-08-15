@@ -1,4 +1,5 @@
 import store from "../store";
+import Comments from "./Comments";
 import MAIN from "./MAIN";
 import Replies from "./Replies";
 
@@ -38,14 +39,23 @@ class ReplyComment extends MAIN {
           replies: [...replies, newReply]
         })
           .then(() => {
+            let numberOfReplies = props?.comment?.replies.length;
             store.data.comments.filter(com => {
               if (+com.id === +props?.comment?.id) {
                 com.replies = [...com.replies, newReply];
+                
+                if (!numberOfReplies) {
+                  Comments.rerender();
+                } else {
+                  Replies.rerender(props);
+                }
               }
             })
-            Replies.rerender(props);
+            numberOfReplies = props?.comment?.replies.length;
             this.#data.reply = "";
-            this.select(`#replyInput${props?.id} textarea`).value = "";
+            if (this.select(`#replyInput${props?.id} textarea`)) {
+              this.select(`#replyInput${props?.id} textarea`).value = "";
+            }
           })
       }
     })
@@ -81,7 +91,7 @@ class ReplyComment extends MAIN {
 
   rerender(props) {
     setTimeout(() => this.handler(props));
-    this.select(`#replyCommentsSection${props?.id}`).insertAdjacentHTML("afterbegin", this.#UI(props));
+    this.select(`#replyCommentsSection${props?.id}`)?.insertAdjacentHTML("afterbegin", this.#UI(props));
   }
 }
 
