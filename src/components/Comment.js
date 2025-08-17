@@ -87,7 +87,7 @@ class Comment extends MAIN {
 
             <div class="text-sm text-[#67727eff] break-all">
               <p>
-                ${`${id}`.includes("_") ? `<span class="text-[#5457b6ff] font-medium">@${mainComment?.author}</span>` : ''}
+                ${`${id}`.includes("_") ? `<span class="text-[#5457b6ff] font-medium">@${comment?.to}</span>` : ''}
                 <span id="commentContent${id}">${comment?.content}</span>
               </p>
             </div>

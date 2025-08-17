@@ -1,7 +1,6 @@
 import store from "../store";
 import Comments from "./Comments";
 import MAIN from "./MAIN";
-import Replies from "./Replies";
 
 class ReplyComment extends MAIN {
 
@@ -17,7 +16,7 @@ class ReplyComment extends MAIN {
 
     this.select(`#replyForm${props?.id}`)?.addEventListener("submit", async (e) => {
       e.preventDefault();
-      let replies = store.data.comments.find(com => +com.id === +props?.comment?.id).replies;
+      let replies = props?.mainComment?.replies;
       let biggestId = "0";
 
       if (replies.length) {
@@ -29,33 +28,23 @@ class ReplyComment extends MAIN {
         content: this.#data.reply,
         createdAt: `${new Date().getFullYear()} - ${new Date().getMonth() + 1} - ${new Date().getDate()}`,
         author: store.data.loggedInUser?.username,
+        to: props?.comment?.author,
         likes: [],
         dislikes: []
       }
 
       if (this.#data.reply) {
 
-        await store.methods.editComment(props?.comment?.id, {
+        await store.methods.editComment(props?.mainComment?.id, {
           replies: [...replies, newReply]
         })
           .then(() => {
-            let numberOfReplies = props?.comment?.replies.length;
             store.data.comments.filter(com => {
-              if (+com.id === +props?.comment?.id) {
+              if (`${com.id}` === `${props?.mainComment?.id}`) {
                 com.replies = [...com.replies, newReply];
-                
-                if (!numberOfReplies) {
-                  Comments.rerender();
-                } else {
-                  Replies.rerender(props);
-                }
               }
             })
-            numberOfReplies = props?.comment?.replies.length;
-            this.#data.reply = "";
-            if (this.select(`#replyInput${props?.id} textarea`)) {
-              this.select(`#replyInput${props?.id} textarea`).value = "";
-            }
+            Comments.render();
           })
       }
     })
