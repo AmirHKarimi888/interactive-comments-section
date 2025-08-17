@@ -1,3 +1,4 @@
+import useFormatDate from "../hooks/useFormatDate";
 import store from "../store";
 import DeleteComment from "./DeleteComment";
 import EditBtn from "./EditBtn";
@@ -80,7 +81,7 @@ class Comment extends MAIN {
               ` : ''}
 
               <span class="text-sm text-[#67727eff]">
-                ${comment?.createdAt}
+                ${useFormatDate().formatDateAgo(comment?.createdAt)}
               <span>
             </div>
 

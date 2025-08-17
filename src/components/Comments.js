@@ -18,7 +18,7 @@ class Comments extends MAIN {
     #UI() {
         return `
         <ul id="commentsSection" class="flex flex-col gap-4">
-          ${ store.data.loggedInUser?.id ? `<br/><br/><button id="signOutBtn">Sign Out</button>` : '' }
+          ${ store.data.loggedInUser?.id ? `<br/><br/><button id="signOutBtn" class="signup-btn w-20">Sign Out</button>` : '' }
           ${store.data.comments.map(comment => {
             return `
             <li id="comment${comment?.id}">
