@@ -22,7 +22,7 @@ let methods = {
         try {
             return await server.get(`users/${userInfo?.id}`)
                 .then(d => data.loggedInUser = d)
-                .then(d => document.cookie = `userId=${d?.id}; max-age=2592000; path=https://interactive-comments-section-ruddy-nine.vercel.app/`)
+                .then(d => localStorage.setItem("userId", d?.id))
                 .then(() => App.rerender("#app"));
         } catch (err) {
             console.error(err.message);
@@ -37,7 +37,7 @@ let methods = {
         }
     },
     async getSignedInUser() {
-        const userId = `${document.cookie}`.split("; userId=")[1];
+        const userId = localStorage.getItem("userId");
         if (userId) {
             try {
                 return await server.get(`users/${userId}`)
@@ -57,7 +57,7 @@ let methods = {
         }
     },
     signOut() {
-        document.cookie = "userId=; max-age=0; path=https://interactive-comments-section-ruddy-nine.vercel.app/";
+        localStorage.setItem("userId", "");
         data.loggedInUser = "";
         App.rerender("#app");
     },
