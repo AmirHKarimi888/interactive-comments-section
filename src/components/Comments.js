@@ -19,15 +19,15 @@ class Comments extends MAIN {
         return `
         <ul id="commentsSection" class="flex flex-col gap-4">
           ${ store.data.loggedInUser?.id ? `<br/><br/><button id="signOutBtn">Sign Out</button>` : '' }
-          ${store.data.comments.sort((a, b) => +a?.id - +b?.id).map(comment => {
+          ${store.data.comments.map(comment => {
             return `
             <li id="comment${comment?.id}">
               ${Comment.render({ mainComment: comment, comment: comment, id: comment?.id })}
             </li>
-            <div id="replyCommentsSection${comment?.id}" class="reply-section hidden">
+            <div id="replyCommentsSection${comment?.id}" class="reply-comment-section hidden">
               ${ReplyComment.render({ mainComment: comment, comment: comment, id: comment?.id })}
             </div>
-            <div id="editCommentsSection${comment?.id}" class="edit-section hidden">
+            <div id="editCommentsSection${comment?.id}" class="edit-comment-section hidden">
               ${EditComment.render({ mainComment: comment, comment: comment, id: comment?.id })}
             </div>
             `

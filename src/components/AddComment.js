@@ -16,7 +16,7 @@ class AddComment extends MAIN {
 
     this.select(`#addCommentSection`)?.addEventListener("submit", async (e) => {
       e.preventDefault();
-      let biggestId = store.data.comments.sort((a, b) => +b?.id - a?.id)[0]?.id;
+      let biggestId = `${[...store.data.comments].sort((a, b) => +b?.id - a?.id)[0]?.id}`;
 
       let newComment = {
         id: `${+biggestId + 1}`,
@@ -31,7 +31,7 @@ class AddComment extends MAIN {
       if (this.#data.comment) {
         await store.methods.addComment(newComment)
           .then(() => {
-            store.data.comments.push(newComment);
+            store.data.comments = [...store.data.comments, newComment];
             Comments.rerender();
           })
       }
@@ -61,9 +61,6 @@ class AddComment extends MAIN {
     return this.#UI();
   }
 
-  rerender() {
-
-  }
 }
 
 export default new AddComment();

@@ -21,7 +21,7 @@ class ReplyComment extends MAIN {
       let biggestId = "0";
 
       if (replies.length) {
-        biggestId = replies.sort((a, b) => +b?.id - a?.id)[0]?.id;
+        biggestId = [...replies].sort((a, b) => +b?.id - a?.id)[0]?.id;
       }
 
       let newReply = {
@@ -92,6 +92,10 @@ class ReplyComment extends MAIN {
 
   rerender(props) {
     setTimeout(() => this.handler(props));
+    this.selectAll(".reply-comment-section").forEach(el => {
+      el.innerHTML = "";
+      el.classList.add("hidden");
+    })
     this.select(`#replyCommentsSection${props?.id}`)?.insertAdjacentHTML("afterbegin", this.#UI(props));
     this.select(`#replyCommentsSection${props?.id}`).classList.remove("hidden");
   }

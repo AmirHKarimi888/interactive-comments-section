@@ -1,6 +1,5 @@
 import store from "../store";
-import Comments from "./Comments";
-import DeleteBtn from "./DeleteBtn";
+import DeleteComment from "./DeleteComment";
 import EditBtn from "./EditBtn";
 import EditComment from "./EditComment";
 import LikeComment from "./LikeComment";
@@ -44,155 +43,15 @@ class Comment extends MAIN {
     })
 
     this.select(`#deleteBtn${props?.id}`)?.addEventListener("click", async () => {
-      await store.methods.deleteComment(props?.comment?.id)
-        .then(() => {
-          store.data.comments = store.data.comments.filter(com => {
-            if (`${com.id}` !== `${props?.comment?.id}`) {
-              return com;
-            }
-          })
-        })
-        .then(() => Comments.render())
+      await DeleteComment.rerender(props);
     })
 
     this.select(`#likeBtn${props?.id}`)?.addEventListener("click", async () => {
-
-      let likes = [];
-      let dislikes = [];
-
-      if (props?.comment?.likes.includes(store.data.loggedInUser?.username)) {
-
-        likes = [...props?.comment?.likes].filter(like => {
-          if (like !== store.data.loggedInUser?.username) {
-            return like;
-          }
-        })
-
-      } else {
-        likes = [...props?.comment?.likes, store.data.loggedInUser?.username];
-        dislikes = [...props?.comment?.dislikes].filter(dislike => {
-          if (dislike !== store.data.loggedInUser?.username) {
-            return dislike;
-          }
-        })
-      }
-
-
-
-      if (!props?.id.includes("_")) {
-
-        await store.methods.editComment(props?.id?.split("_")[0], {
-          likes: likes,
-          dislikes: dislikes
-        })
-          .then(() => {
-            store.data.comments.filter(com => {
-              if (com.id === props?.comment?.id) {
-                com.likes = [...likes];
-                com.dislikes = [...dislikes];
-              }
-            })
-
-            LikeComment.rerender(props);
-          })
-
-
-      } else {
-
-
-        let replies = props?.mainComment?.replies;
-
-        replies.filter(rep => {
-          if (+rep.id === +props?.id.split("_")[1]) {
-            rep.likes = [...likes];
-            rep.dislikes = [...dislikes];
-          }
-        })
-
-        await store.methods.editComment(props?.id?.split("_")[0], {
-          replies: replies
-        })
-          .then(() => {
-            store.data.comments.filter(com => {
-              if (com.id === props?.comment?.id) {
-                com.replies = replies;
-              }
-            })
-
-            LikeComment.rerender(props);
-          })
-
-      }
+      await LikeComment.rerender({...props, isDislike: false});
     })
 
     this.select(`#dislikeBtn${props?.id}`)?.addEventListener("click", async () => {
-
-      let likes = [];
-      let dislikes = [];
-
-      if (props?.comment?.dislikes.includes(store.data.loggedInUser?.username)) {
-
-        dislikes = [...props?.comment?.dislikes].filter(dislike => {
-          if (dislike !== store.data.loggedInUser?.username) {
-            return dislike;
-          }
-        })
-
-      } else {
-        dislikes = [...props?.comment?.dislikes, store.data.loggedInUser?.username];
-        likes = [...props?.comment?.likes].filter(like => {
-          if (like !== store.data.loggedInUser?.username) {
-            return like;
-          }
-        })
-      }
-
-
-
-      if (!props?.id.includes("_")) {
-
-        await store.methods.editComment(props?.id?.split("_")[0], {
-          likes: likes,
-          dislikes: dislikes
-        })
-          .then(() => {
-            store.data.comments.filter(com => {
-              if (com.id === props?.comment?.id) {
-                com.likes = [...likes];
-                com.dislikes = [...dislikes];
-              }
-            })
-
-            LikeComment.rerender(props);
-          })
-
-
-      } else {
-
-
-        let replies = props?.mainComment?.replies;
-
-        replies.filter(rep => {
-          if (+rep.id === +props?.id.split("_")[1]) {
-            rep.likes = [...likes];
-            rep.dislikes = [...dislikes];
-          }
-        })
-
-        await store.methods.editComment(props?.id?.split("_")[0], {
-          replies: replies
-        })
-          .then(() => {
-            store.data.comments.filter(com => {
-              if (com.id === props?.comment?.id) {
-                com.replies = replies;
-              }
-            })
-
-            LikeComment.rerender(props);
-          })
-      }
-
+      await LikeComment.rerender({...props, isDislike: true});
     })
   }
 
@@ -228,7 +87,7 @@ class Comment extends MAIN {
             <div class="text-sm text-[#67727eff] break-all">
               <p>
                 ${`${id}`.includes("_") ? `<span class="text-[#5457b6ff] font-medium">@${mainComment?.author}</span>` : ''}
-                <p id="commentContent${id}">${comment?.content}</p>
+                <span id="commentContent${id}">${comment?.content}</span>
               </p>
             </div>
           </div>
@@ -238,7 +97,7 @@ class Comment extends MAIN {
               ${ReplyBtn.render({ comment: comment, id: id })}
             ` : `
               <span class="flex gap-2">
-                ${DeleteBtn.render({ comment: comment, id: id })}
+                ${DeleteComment.render({ comment: comment, id: id })}
                 ${EditBtn.render({ comment: comment, id: id })}
               </span>
             `}

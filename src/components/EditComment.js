@@ -96,6 +96,10 @@ class EditComment extends MAIN {
       this.initiate(props);
       this.handler(props);
     });
+    this.selectAll(".edit-comment-section").forEach(el => {
+      el.innerHTML = "";
+      el.classList.add("hidden");
+    })
     this.select(`#editCommentsSection${props?.id}`).insertAdjacentHTML("afterbegin", this.#UI(props));
     this.select(`#editCommentsSection${props?.id}`).classList.remove("hidden");
   }
