@@ -30,20 +30,16 @@ class Comment extends MAIN {
     this.select(`#replyBtn${props?.id}`)?.addEventListener("click", () => {
       if (this.select(`#replyCommentsSection${props?.id}`).innerHTML.length === 0) {
         ReplyComment.rerender(props);
-        this.select(`#replyCommentsSection${props?.id}`).classList.remove("hidden");
       } else {
         ReplyComment.clear(props);
-        this.select(`#replyCommentsSection${props?.id}`).classList.add("hidden");
       }
     })
 
     this.select(`#editBtn${props?.id}`)?.addEventListener("click", () => {
       if (this.select(`#editCommentsSection${props?.id}`).innerHTML.length === 0) {
         EditComment.rerender(props);
-        this.select(`#editCommentsSection${props?.id}`).classList.remove("hidden");
       } else {
         EditComment.clear(props);
-        this.select(`#editCommentsSection${props?.id}`).classList.add("hidden");
       }
     })
 
@@ -128,7 +124,6 @@ class Comment extends MAIN {
 
       }
     })
-
 
     this.select(`#dislikeBtn${props?.id}`)?.addEventListener("click", async () => {
 
@@ -233,7 +228,7 @@ class Comment extends MAIN {
             <div class="text-sm text-[#67727eff] break-all">
               <p>
                 ${`${id}`.includes("_") ? `<span class="text-[#5457b6ff] font-medium">@${mainComment?.author}</span>` : ''}
-                ${comment?.content}
+                <p id="commentContent${id}">${comment?.content}</p>
               </p>
             </div>
           </div>

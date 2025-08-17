@@ -25,10 +25,10 @@ class Comments extends MAIN {
               ${Comment.render({ mainComment: comment, comment: comment, id: comment?.id })}
             </li>
             <div id="replyCommentsSection${comment?.id}" class="reply-section hidden">
-              ${ReplyComment.render({ comment: comment, id: comment?.id })}
+              ${ReplyComment.render({ mainComment: comment, comment: comment, id: comment?.id })}
             </div>
             <div id="editCommentsSection${comment?.id}" class="edit-section hidden">
-              ${EditComment.render({ comment: comment, id: comment?.id })}
+              ${EditComment.render({ mainComment: comment, comment: comment, id: comment?.id })}
             </div>
             `
           })

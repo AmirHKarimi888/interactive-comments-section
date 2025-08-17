@@ -1,5 +1,4 @@
 import store from "../store";
-import Comments from "./Comments";
 import MAIN from "./MAIN";
 
 class EditComment extends MAIN {
@@ -9,10 +8,12 @@ class EditComment extends MAIN {
   }
 
   initiate(props) {
-    this.select(`#editInput${props?.id} textarea`).innerHTML = props?.comment?.content;
+    if (this.select(`#editInput${props?.id} textarea`)) {
+      this.select(`#editInput${props?.id} textarea`).innerHTML = props?.comment?.content;
+    }
     this.#data.edited = props?.comment?.content;
   }
-  
+
   handler(props) {
 
     this.select(`#editInput${props?.id} textarea`)?.addEventListener("change", () => {
@@ -21,21 +22,42 @@ class EditComment extends MAIN {
 
     this.select(`#editForm${props?.id}`)?.addEventListener("submit", async (e) => {
       e.preventDefault();
-      
+
       if (this.#data.edited) {
-        if (!`${props?.id}`.includes("_")) {
-           await store.methods.editComment(props?.comment?.id, {
-             content: this.#data.edited
-           })
-           .then(() => {
-             store.data.comments.filter(com => {
+        if (!props?.id.includes("_")) {
+          await store.methods.editComment(props?.comment?.id, {
+            content: this.#data.edited
+          })
+            .then(() => {
+              store.data.comments.filter(com => {
                 if (`${com.id}` === `${props?.comment?.id}`) {
-                    com.content = this.#data.edited
+                  com.content = this.#data.edited;
                 }
-             })
-           })
-           .then(() => Comments.rerender(props))
+              })
+            })
+
+
+        } else {
+          let replies = props?.mainComment?.replies;
+          replies.filter(reply => {
+            if (reply.id === props?.comment?.id) {
+              reply.content = this.#data.edited;
+            }
+          })
+          await store.methods.editComment(props?.mainComment?.id, {
+            replies: replies
+          })
+            .then(() => {
+              store.data.comments.filter(com => {
+                if (`${com.id}` === `${props?.comment?.id}`) {
+                  com.replies = [...replies];
+                }
+              })
+            })
         }
+
+        this.select(`#commentContent${props?.id}`).innerHTML = this.#data.edited;
+        this.clear(props);
       }
     })
   }
@@ -66,14 +88,16 @@ class EditComment extends MAIN {
 
   clear(props) {
     this.select(`#editCommentsSection${props?.id}`).innerHTML = "";
+    this.select(`#editCommentsSection${props?.id}`).classList.add("hidden");
   }
 
   rerender(props) {
     setTimeout(() => {
-        this.initiate(props);
-        this.handler(props);
+      this.initiate(props);
+      this.handler(props);
     });
     this.select(`#editCommentsSection${props?.id}`).insertAdjacentHTML("afterbegin", this.#UI(props));
+    this.select(`#editCommentsSection${props?.id}`).classList.remove("hidden");
   }
 }
 

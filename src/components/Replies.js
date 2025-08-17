@@ -16,11 +16,11 @@ class Replies extends MAIN {
               </li>
 
               <div id="replyCommentsSection${comment?.id}_${reply?.id}" class="reply-section hidden">
-                ${ReplyComment.render({ comment: comment, id: `${comment?.id}_${reply?.id}` })}
+                ${ReplyComment.render({ mainComment: comment, comment: reply, id: `${comment?.id}_${reply?.id}` })}
               </div>
 
               <div id="editCommentsSection${comment?.id}_${reply?.id}" class="edit-section hidden">
-                ${EditComment.render({ comment: comment, id: `${comment?.id}_${reply?.id}` })}
+                ${EditComment.render({ mainComment: comment, comment: reply, id: `${comment?.id}_${reply?.id}` })}
               </div>
               `
     })

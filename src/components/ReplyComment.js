@@ -87,11 +87,13 @@ class ReplyComment extends MAIN {
 
   clear(props) {
     this.select(`#replyCommentsSection${props?.id}`).innerHTML = "";
+    this.select(`#replyCommentsSection${props?.id}`).classList.add("hidden");
   }
 
   rerender(props) {
     setTimeout(() => this.handler(props));
     this.select(`#replyCommentsSection${props?.id}`)?.insertAdjacentHTML("afterbegin", this.#UI(props));
+    this.select(`#replyCommentsSection${props?.id}`).classList.remove("hidden");
   }
 }
 
