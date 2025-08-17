@@ -18,8 +18,8 @@ class App extends MAIN {
         </header>
 
         <main>
-          <div id="mainContainer" class="max-[800px]:px-4 py-12 max-[900px]:px-8 min-[900px]:px-16 min-[1000px]:px-32 min-[1200px]:px-64 rubik-400">
-            ${store.data.loggedInUser?.id ? Comments.render() : Authentication.render()}
+          <div id="mainContainer" class="max-[800px]:px-4 ${store.data.loggedInUser? 'py-6' : ''} max-[900px]:px-8 min-[900px]:px-16 min-[1000px]:px-32 min-[1200px]:px-64 rubik-400">
+            ${store.data.loggedInUser?.id ? `<div id="commentsSection">${Comments.render()}</div>` : Authentication.render()}
           </div>
         </main>
 

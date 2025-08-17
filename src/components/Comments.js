@@ -6,21 +6,23 @@ import MAIN from "./MAIN";
 import ReplyComment from "./ReplyComment";
 
 class Comments extends MAIN {
-    async initiate() {
-        await store.methods.getComments()
-        .then(() => this.rerender());
-    }
+  async initiate() {
+    await store.methods.getComments()
+      .then(() => this.rerender());
+  }
 
-    handler() {
-        this.select("#signOutBtn")?.addEventListener("click", () => store.methods.signOut());
-    }
+  handler() {
+    this.select("#signOutBtn")?.addEventListener("click", () => store.methods.signOut());
+  }
 
-    #UI() {
-        return `
-        <ul id="commentsSection" class="flex flex-col gap-4">
-          ${ store.data.loggedInUser?.id ? `<br/><br/><button id="signOutBtn" class="signup-btn w-20">Sign Out</button>` : '' }
+  #UI() {
+    return `
+    <div class="flex flex-col gap-4">
+        ${store.data.loggedInUser?.id ? `<button id="signOutBtn" class="signup-btn w-20">Sign Out</button>` : ''}
+        ${store.data.comments.length ? `
+        <ul class="flex flex-col gap-4">
           ${store.data.comments.map(comment => {
-            return `
+      return `
             <li id="comment${comment?.id}">
               ${Comment.render({ mainComment: comment, comment: comment, id: comment?.id })}
             </li>
@@ -33,26 +35,33 @@ class Comments extends MAIN {
             `
           })
           .join("")}
-          <div>
-            ${AddComment.render()}
-          </div>
-        </ul>
+        </ul>` :
         `
-    }
+        <div class="w-full flex justify-center py-6">
+          No comments yet...
+        </div>
+        `}
+        <div>
+          ${AddComment.render()}
+        </div>
+        `
+  }
 
-    render() {
-        setTimeout(async() => {
-            await this.initiate()
-            this.handler();
-        });
-        return this.#UI();
-    }
+  render() {
+    setTimeout(async () => {
+      await this.initiate()
+      this.handler();
+    });
+    return this.#UI();
+  }
 
-    rerender() {
-        setTimeout(() => this.handler());
-        this.select("#commentsSection").innerHTML = "";
-        this.select("#commentsSection").insertAdjacentHTML("afterbegin", this.#UI());
+  rerender() {
+    setTimeout(() => this.handler());
+    if (this.select("#commentsSection")) {
+      this.select("#commentsSection").innerHTML = "";
+      this.select("#commentsSection").insertAdjacentHTML("afterbegin", this.#UI());
     }
+  }
 }
 
 export default new Comments();
