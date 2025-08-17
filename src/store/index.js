@@ -22,7 +22,7 @@ let methods = {
         try {
             return await server.get(`users/${userInfo?.id}`)
                 .then(d => data.loggedInUser = d)
-                .then(d => document.cookie = `userId=${d?.id}; max-age=2592000; path=/`)
+                .then(d => document.cookie = `userId=${d?.id}; max-age=2592000; path=https://interactive-comments-section-ruddy-nine.vercel.app/`)
                 .then(() => App.rerender("#app"));
         } catch (err) {
             console.error(err.message);
@@ -57,7 +57,7 @@ let methods = {
         }
     },
     signOut() {
-        document.cookie = "userId=; max-age=0; path=/";
+        document.cookie = "userId=; max-age=0; path=https://interactive-comments-section-ruddy-nine.vercel.app/";
         data.loggedInUser = "";
         App.rerender("#app");
     },
